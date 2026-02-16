@@ -2,21 +2,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <meta charset="UTF-8">
-    <title>Система управления товарами</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Главная страница</title>
 </head>
 <body>
-    <jsp:include page="jspf/header.jsp" />
+    <jsp:include page="/jspf/header.jsp" />
     
     <div id="main">
         <h2>Функции системы</h2>
-        <ul>
-            <li><a href="products">Управление товарами</a></li>
-            <li><a href="manufacturers">Управление производителями</a></li>
-        </ul>
+        <nav>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/products">Управление товарами</a></li>
+                <li><a href="${pageContext.request.contextPath}/manufacturers">Управление производителями</a></li>
+            </ul>
+        </nav>
     </div>
     
-    <jsp:include page="jspf/footer.jsp" />
+    <jsp:include page="/jspf/footer.jsp" />
 </body>
 </html>

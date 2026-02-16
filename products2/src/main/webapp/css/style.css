@@ -65,3 +65,108 @@ footer {
     text-align: center;
     padding-top: 30px;
 }
+/* Стили для таблиц */
+table {
+    width: 96%;
+    margin: 2%;
+    border-collapse: collapse;
+    background: #f0f0ff;
+    border-radius: 5px;
+}
+
+th {
+    background-color: #4a6fa5;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+}
+
+td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: #e0e0ff;
+}
+
+/* Стили для форм */
+form {
+    width: 96%;
+    margin: 2%;
+}
+
+form p {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+form label {
+    width: 150px;
+    font-weight: bold;
+}
+
+form input, form select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+form input:focus, form select:focus {
+    outline: none;
+    border-color: #4a6fa5;
+    box-shadow: 0 0 5px rgba(74, 111, 165, 0.3);
+}
+
+button {
+    background: #4a6fa5;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 150px;
+}
+
+button:hover {
+    background: #2c5282;
+}
+
+/* Стили для aside и article */
+.leftAside {
+    float: left;
+    width: 65%;
+    background: #f0f0ff;
+    border-radius: 5px;
+    margin-right: 2%;
+    min-height: 400px;
+}
+
+section {
+    float: right;
+    width: 33%;
+}
+
+article {
+    background: #f0f0ff;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+article h3 {
+    background: #4a6fa5;
+    color: white;
+    padding: 10px;
+    margin: 0;
+    border-radius: 5px 5px 0 0;
+}
+
+.text-article {
+    padding: 15px;
+    background: white;
+    border-radius: 0 0 5px 5px;
+}
