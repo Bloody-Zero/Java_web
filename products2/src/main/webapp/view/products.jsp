@@ -1,28 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ page import="domain.Product" %>
-<%@ page import="domain.Manufacturer" %>
-
-<%
-    // Тестовые данные для производителей (для выпадающего списка)
-    Manufacturer m1 = new Manufacturer(1L, "ООО Технопром", "Россия", "Иванов И.И.", "+7 (495) 123-45-67");
-    Manufacturer m2 = new Manufacturer(2L, "Samsung Electronics", "Южная Корея", "Kim D.S.", "+82 (2) 345-67-89");
-    Manufacturer m3 = new Manufacturer(3L, "Apple Inc.", "США", "Tim Cook", "+1 (408) 996-10-10");
-    Manufacturer m4 = new Manufacturer(4L, "ООО Мегаполис", "Россия", "Петров П.П.", "+7 (812) 234-56-78");
-    
-    Manufacturer[] manufacturers = new Manufacturer[]{m1, m2, m3, m4};
-    pageContext.setAttribute("manufacturers", manufacturers);
-    
-    // Тестовые данные для товаров
-    Product p1 = new Product(1L, "Ноутбук", "15.6 дюймов", 2.5, 1L, m1);
-    Product p2 = new Product(2L, "Смартфон Galaxy", "6.5 дюймов", 0.2, 2L, m2);
-    Product p3 = new Product(3L, "iPhone 15", "6.1 дюймов", 0.18, 3L, m3);
-    Product p4 = new Product(4L, "Холодильник", "180 см", 75.0, 4L, m4);
-    Product p5 = new Product(5L, "Телевизор QLED", "55 дюймов", 15.5, 2L, m2);
-    
-    Product[] products = new Product[]{p1, p2, p3, p4, p5};
-    pageContext.setAttribute("products", products);
-%>
+<%@ page import="domain.Product"%>
+<%@ page import="domain.Manufacturer"%>
 
 <!DOCTYPE html>
 <html>
@@ -40,11 +19,12 @@
             <table>
                 <thead>
                     <tr>
-                        <th scope="col">Код</th>
-                        <th scope="col">Наименование</th>
-                        <th scope="col">Размер</th>
-                        <th scope="col">Вес (кг)</th>
-                        <th scope="col">Производитель</th>
+                        <th>Код</th>
+                        <th>Наименование</th>
+                        <th>Размер</th>
+                        <th>Вес (кг)</th>
+                        <th>Производитель</th>
+                        <th>Страна</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,7 +34,8 @@
                             <td>${product.getName()}</td>
                             <td>${product.getSize()}</td>
                             <td>${product.getWeight()}</td>
-                            <td>${product.getManufacturerName()}</td>
+                            <td>${product.getManufacturer().getName()}</td>
+                            <td>${product.getManufacturer().getCountry()}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -82,9 +63,9 @@
                             <label for="manufacturerId">Производитель:</label>
                             <select name="manufacturerId" id="manufacturerId" required>
                                 <option disabled selected>Выберите производителя</option>
-                                <c:forEach var="manufacturer" items="${manufacturers}">
-                                    <option value="${manufacturer.getId()}">
-                                        ${manufacturer.getName()} (${manufacturer.getCountry()})
+                                <c:forEach var="man" items="${manufacturers}">
+                                    <option value="${man.getId()}">
+                                        ${man.getName()} (${man.getCountry()})
                                     </option>
                                 </c:forEach>
                             </select>
