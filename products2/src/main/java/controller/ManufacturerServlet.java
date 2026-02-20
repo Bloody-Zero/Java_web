@@ -3,6 +3,7 @@ package controller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class ManufacturerServlet extends HttpServlet {
     
     ConnectionProperty prop;
     String select_all_manufacturers = "SELECT id, name, country, contact_person, phone FROM manufacturers ORDER BY id";
+    String insert_manufacturer = "INSERT INTO manufacturers (name, country, contact_person, phone) VALUES(?, ?, ?, ?)";
+    
     ArrayList<Manufacturer> manufacturers = new ArrayList<>();
     String userPath;
     
@@ -72,6 +75,44 @@ public class ManufacturerServlet extends HttpServlet {
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        
+        ProductConnBuilder builder = new ProductConnBuilder();
+        
+        try (Connection conn = builder.getConnection()) {
+            
+            // Получение параметров из формы
+            String name = request.getParameter("name");
+            String country = request.getParameter("country");
+            String contactPerson = request.getParameter("contactPerson");
+            String phone = request.getParameter("phone");
+            
+            // Создание объекта нового производителя
+            Manufacturer newManufacturer = new Manufacturer(name, country, contactPerson, phone);
+            
+            // Подготовка и выполнение INSERT запроса
+            try (PreparedStatement preparedStatement = conn.prepareStatement(insert_manufacturer)) {
+                preparedStatement.setString(1, newManufacturer.getName());
+                preparedStatement.setString(2, newManufacturer.getCountry());
+                preparedStatement.setString(3, newManufacturer.getContactPerson());
+                preparedStatement.setString(4, newManufacturer.getPhone());
+                
+                int result = preparedStatement.executeUpdate();
+                System.out.println("Добавлено записей: " + result);
+                
+            } catch (Exception e) {
+                System.out.println("Ошибка при добавлении производителя: " + e.getMessage());
+                e.printStackTrace();
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Ошибка подключения к БД: " + e.getMessage());
+            e.printStackTrace();
+            // В случае ошибки перенаправляем на страницу
+            getServletContext().getRequestDispatcher("/view/manufacturers.jsp").forward(request, response);
+            return;
+        }
+        
+        // После успешного добавления вызываем doGet для обновления списка
         doGet(request, response);
     }
 }

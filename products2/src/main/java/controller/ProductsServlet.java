@@ -3,6 +3,7 @@ package controller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -24,12 +25,14 @@ public class ProductsServlet extends HttpServlet {
     
     ConnectionProperty prop;
     String select_all_products = "SELECT p.id, p.name, p.size, p.weight, "
-            + "p.manufacturer_id, m.name as manufacturer_name, m.country "
+            + "p.manufacturer_id, m.name as manufacturer_name, m.country, "
+            + "m.contact_person, m.phone "
             + "FROM products p "
             + "JOIN manufacturers m ON p.manufacturer_id = m.id "
             + "ORDER BY p.id";
     
     String select_all_manufacturers = "SELECT id, name, country, contact_person, phone FROM manufacturers ORDER BY id";
+    String insert_product = "INSERT INTO products (name, size, weight, manufacturer_id) VALUES(?, ?, ?, ?)";
     
     ArrayList<Product> products = new ArrayList<>();
     ArrayList<Manufacturer> manufacturers = new ArrayList<>();
@@ -117,6 +120,57 @@ public class ProductsServlet extends HttpServlet {
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        
+        ProductConnBuilder builder = new ProductConnBuilder();
+        
+        try (Connection conn = builder.getConnection()) {
+            
+            // Получение параметров из формы
+            String name = request.getParameter("name");
+            String size = request.getParameter("size");
+            String weightStr = request.getParameter("weight");
+            String manufacturerIdStr = request.getParameter("manufacturerId");
+            
+            // Преобразование строк в нужные типы
+            Double weight = Double.parseDouble(weightStr);
+            Long manufacturerId = Long.parseLong(manufacturerIdStr);
+            
+            // Получаем объект производителя по ID (нужен для создания Product)
+            Manufacturer manufacturer = null;
+            for (Manufacturer m : manufacturers) {
+                if (m.getId().equals(manufacturerId)) {
+                    manufacturer = m;
+                    break;
+                }
+            }
+            
+            // Создание объекта нового товара
+            Product newProduct = new Product(name, size, weight, manufacturerId, manufacturer);
+            
+            // Подготовка и выполнение INSERT запроса
+            try (PreparedStatement preparedStatement = conn.prepareStatement(insert_product)) {
+                preparedStatement.setString(1, newProduct.getName());
+                preparedStatement.setString(2, newProduct.getSize());
+                preparedStatement.setDouble(3, newProduct.getWeight());
+                preparedStatement.setLong(4, newProduct.getManufacturerId());
+                
+                int result = preparedStatement.executeUpdate();
+                System.out.println("Добавлено записей: " + result);
+                
+            } catch (Exception e) {
+                System.out.println("Ошибка при добавлении товара: " + e.getMessage());
+                e.printStackTrace();
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Ошибка подключения к БД: " + e.getMessage());
+            e.printStackTrace();
+            // В случае ошибки перенаправляем на страницу
+            getServletContext().getRequestDispatcher("/view/products.jsp").forward(request, response);
+            return;
+        }
+        
+        // После успешного добавления вызываем doGet для обновления списка
         doGet(request, response);
     }
 }
