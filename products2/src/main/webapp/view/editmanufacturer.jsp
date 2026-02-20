@@ -16,7 +16,7 @@
     <!-- Ваши собственные стили -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
     
-    <title>Производители</title>
+    <title>Редактирование производителя</title>
 </head>
 <body>
     <jsp:include page="/jspf/header.jsp" />
@@ -37,7 +37,6 @@
                                     <th>Страна</th>
                                     <th>Контактное лицо</th>
                                     <th>Телефон</th>
-                                    <th>Действия</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,17 +47,6 @@
                                         <td>${manufacturer.getCountry()}</td>
                                         <td>${manufacturer.getContactPerson()}</td>
                                         <td>${manufacturer.getPhone()}</td>
-                                        <td>
-                                            <a href="${pageContext.request.contextPath}/editmanufacturer?id=${manufacturer.getId()}" 
-                                               class="btn btn-sm btn-outline-primary" title="Редактировать">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="${pageContext.request.contextPath}/deletemanufacturer?id=${manufacturer.getId()}" 
-                                               class="btn btn-sm btn-outline-danger" title="Удалить"
-                                               onclick="return confirm('Вы уверены, что хотите удалить производителя ${manufacturer.getName()}?')">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
-                                        </td>
                                     </tr>
                                 </c:forEach>
                             </tbody>
@@ -69,30 +57,50 @@
             
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h4>Добавить производителя</h4>
+                    <div class="card-header bg-warning">
+                        <h4>Редактирование производителя</h4>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="${pageContext.request.contextPath}/manufacturers">
+                        <form method="POST" action="${pageContext.request.contextPath}/editmanufacturer">
+                            <input type="hidden" name="id" value="${manufacturerEdit[0].getId()}" />
+                            
+                            <div class="form-group">
+                                <label for="id_display">Код производителя:</label>
+                                <input type="text" class="form-control" id="id_display" 
+                                       value="${manufacturerEdit[0].getId()}" readonly />
+                            </div>
+                            
                             <div class="form-group">
                                 <label for="name">Название компании:</label>
-                                <input type="text" class="form-control" name="name" id="name" required />
+                                <input type="text" class="form-control" name="name" id="name" 
+                                       value="${manufacturerEdit[0].getName()}" required />
                             </div>
+                            
                             <div class="form-group">
                                 <label for="country">Страна:</label>
-                                <input type="text" class="form-control" name="country" id="country" required />
+                                <input type="text" class="form-control" name="country" id="country" 
+                                       value="${manufacturerEdit[0].getCountry()}" required />
                             </div>
+                            
                             <div class="form-group">
                                 <label for="contactPerson">Контактное лицо:</label>
-                                <input type="text" class="form-control" name="contactPerson" id="contactPerson" required />
+                                <input type="text" class="form-control" name="contactPerson" id="contactPerson" 
+                                       value="${manufacturerEdit[0].getContactPerson()}" required />
                             </div>
+                            
                             <div class="form-group">
                                 <label for="phone">Телефон:</label>
-                                <input type="text" class="form-control" name="phone" id="phone" required />
+                                <input type="text" class="form-control" name="phone" id="phone" 
+                                       value="${manufacturerEdit[0].getPhone()}" required />
                             </div>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-plus-circle"></i> Добавить
+                            
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save"></i> Сохранить изменения
                             </button>
+                            <a href="${pageContext.request.contextPath}/manufacturers" 
+                               class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Отмена
+                            </a>
                         </form>
                     </div>
                 </div>
@@ -102,7 +110,7 @@
     
     <jsp:include page="/jspf/footer.jsp" />
     
-    <!-- Bootstrap JS (необязательно, но может пригодиться) -->
+    <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
